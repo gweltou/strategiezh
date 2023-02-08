@@ -2,14 +2,20 @@ class Kellig:
     def __init__(self, x, y):
         self.pos = PVector(x, y)
         self.value = int(random(1, 6))
-        self.clicked = False
+        self.dizoloet = False
+        self.amezog = set()
     
     def draw(self):
-        if self.clicked:
-            fill(100, 100, 255)
+        if self.dizoloet:
+            fill(100 + self.value * 24, 100, 255);
+            draw_hex(self.pos.x, self.pos.y, self.rad)
+            fill(255)
+            textSize(20)
+            text(self.value, self.pos.x-5, self.pos.y+5)
+            fill(255)
         else:
             fill(200)
-        draw_hex(self.pos.x, self.pos.y, self.rad)
+            draw_hex(self.pos.x, self.pos.y, self.rad)
 
 
 kelligou = []
@@ -22,6 +28,12 @@ def setup():
     N = 8 # Niver a c'hellig dre kostez
     S = 25 # Ment pep kellig (e pixel)
     build_kael(N, S)
+    
+    # Klask an amezeien tro-dro pep kellig
+    for k1 in kelligou:
+        for k2 in kelligou:
+            if dist(k1.pos.x, k1.pos.y, k2.pos.x, k2.pos.y) < 2*S+5 and k1 != k2:
+                k1.amezog.add(k2)
 
 
 def draw():
@@ -50,8 +62,11 @@ def draw():
 
 
 def mousePressed():
-    if tostan:
-        tostan.clicked = not tostan.clicked
+    if tostan and not tostan.dizoloet:
+        tostan.dizoloet = True
+        # Dizoloiñ ar c'helligoù tro-dro
+        for k in tostan.amezog:
+            k.dizoloet = True
 
 
 def draw_hex(posx, posy, rad):
