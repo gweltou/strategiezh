@@ -1,3 +1,13 @@
+from random import shuffle
+
+
+class Choarier:
+    def __init__(self, anv, liv):
+        self.anv = anv
+        self.liv = liv
+        self.taol_kentan = True
+
+
 class Kellig:
     def __init__(self, x, y):
         self.pos = PVector(x, y)
@@ -18,16 +28,33 @@ class Kellig:
             draw_hex(self.pos.x, self.pos.y, self.rad)
 
 
-kelligou = []
 
+kelligou = []
+choarierien = []
 
 def setup():
     size(800, 600)
     
+    # Krouiñ c'hoarierien
+    NIVER_CHOARIERIEN = 3
+    liviou = [
+              color(130, 180, 30),
+              color(30, 255, 50),
+              color(240, 30, 255),
+              color(120, 127, 220),
+              color(255, 90, 110),
+              color(90, 250, 255)
+            ]
+    shuffle(liviou)    # Meskañ al livioù
+    for i in range(NIVER_CHOARIERIEN):
+        choarierien.append(Choarier("C'hoarier " + str(i+1), liviou[i]))
+    global n_choarier
+    n_choarier = 0
+    
     # Amañ e vez dibabet ment an tablez
     N = 8 # Niver a c'hellig dre kostez
     S = 25 # Ment pep kellig (e pixel)
-    build_kael(N, S)
+    sevel_kael(N, S)
     
     # Klask an amezeien tro-dro pep kellig
     for k1 in kelligou:
@@ -38,7 +65,16 @@ def setup():
 
 def draw():
     global tostan
+    
     background(255)
+    
+    choarier = choarierien[n_choarier]
+    fill(choarier.liv)
+    noStroke()
+    circle(20, 20, 20)
+    fill(0)
+    textSize(20)
+    text(choarier.anv, 40, 27)
     
     # Klask ar c'hellig an tostañ eus ar logodenn
     min_dist = 999.0
@@ -62,11 +98,17 @@ def draw():
 
 
 def mousePressed():
+    global n_choarier
+    
     if tostan and not tostan.dizoloet:
         tostan.dizoloet = True
         # Dizoloiñ ar c'helligoù tro-dro
         for k in tostan.amezog:
             k.dizoloet = True
+        
+    n_choarier += 1
+    if n_choarier >= len(choarierien):
+        n_choarier = 0
 
 
 def draw_hex(posx, posy, rad):
@@ -81,7 +123,7 @@ def draw_hex(posx, posy, rad):
     endShape(CLOSE);
 
 
-def build_kael(n, rad):
+def sevel_kael(n, rad):
     Kellig.rad = rad
     kreizX = width*0.5
     kreizY = height*0.5
