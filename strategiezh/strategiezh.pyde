@@ -1,3 +1,5 @@
+#ANV AR C'HOARI
+
 from random import shuffle
 
 
@@ -14,17 +16,24 @@ class Kellig:
         self.value = int(random(1, 6))
         self.dizoloet = False
         self.amezog = set()
+        self.choarier = -1  # -1 m'a n'eo ket bet aloubet, niveren ar c'hoarier perc'hen mod-all
     
     def draw(self):
+        # Fonksion galvet evit tresañ pep kellig
+        
         if self.dizoloet:
-            fill(100 + self.value * 24, 100, 255);
+            val2 = self.value * self.value
+            fill(val2 * 2, val2 * 4, val2 * 2.5);
             draw_hex(self.pos.x, self.pos.y, self.rad)
+            if self.choarier != -1:
+                # Tresañ merk liv ar c'hoarier n'eus aloubet ar c'hellig mañ
+                fill(choarierien[self.choarier].liv)
+                circle(self.pos.x-10, self.pos.y+10, 10)
             fill(255)
             textSize(20)
             text(self.value, self.pos.x-5, self.pos.y+5)
-            fill(255)
         else:
-            fill(200)
+            fill(220, 230, 190)
             draw_hex(self.pos.x, self.pos.y, self.rad)
 
 
@@ -97,18 +106,32 @@ def draw():
         draw_hex(tostan.pos.x, tostan.pos.y, tostan.rad)
 
 
+
 def mousePressed():
     global n_choarier
     
-    if tostan and not tostan.dizoloet:
-        tostan.dizoloet = True
-        # Dizoloiñ ar c'helligoù tro-dro
-        for k in tostan.amezog:
-            k.dizoloet = True
+    if tostan:
+        # Kliket eo bet war ur c'hellig
         
-    n_choarier += 1
-    if n_choarier >= len(choarierien):
-        n_choarier = 0
+        is_valid_move = False
+        if tostan.dizoloet and tostan.choarier == -1:
+            # Ar c'hoarier a aloub anezhi ma'z eo bet dizoloet ha m'a n'eo ket bet aloubet dija
+            tostan.choarier = n_choarier
+            is_valid_move = True
+        elif not tostan.dizoloet:
+            # Dizoloiñ ar c'hellig ma n'eo ket bet dija
+            tostan.dizoloet = True
+            is_valid_move = True
+            
+        if is_valid_move:
+            # Dizoloiñ ar c'helligoù tro-dro
+            for k in tostan.amezog:
+                k.dizoloet = True
+            
+            # Tremenet e vez d'ar c'hoarier da-heul
+            n_choarier += 1
+            if n_choarier >= len(choarierien):
+                n_choarier = 0
 
 
 def draw_hex(posx, posy, rad):
@@ -142,3 +165,10 @@ def sevel_kael(n, rad):
         for j in range(2*n - 1 - i):
             kelligou.append(Kellig(xi + j*d2, yi_down))
             kelligou.append(Kellig(xi + j*d2, yi_up))
+    
+    
+def keyPressed():
+    # Saveteet e vez ur poltred-skramm
+    if key == 'p':
+        saveFrame("strategiezh_###.png")
+        println("Poltred-scramm saveteet")
