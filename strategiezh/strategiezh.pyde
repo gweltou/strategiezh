@@ -23,8 +23,9 @@ class Kellig:
         
         if self.dizoloet:
             val2 = self.value * self.value
-            fill(val2 * 2, val2 * 4, val2 * 2.5);
+            fill(val2 * 2, val2 * 4, val2 * 2.5)
             draw_hex(self.pos.x, self.pos.y, self.rad)
+            
             if self.choarier != -1:
                 # Tresañ merk liv ar c'hoarier n'eus aloubet ar c'hellig mañ
                 fill(choarierien[self.choarier].liv)
@@ -33,7 +34,8 @@ class Kellig:
             textSize(20)
             text(self.value, self.pos.x-5, self.pos.y+5)
         else:
-            fill(220, 230, 190)
+            n = noise(self.pos.x * 10, self.pos.y * 10) * 44
+            fill(220-n, 230-n, 190-n)
             draw_hex(self.pos.x, self.pos.y, self.rad)
 
 
@@ -75,13 +77,13 @@ def setup():
 def draw():
     global tostan
     
-    background(255)
+    background(220 * 0.4, 230 * 0.4, 190 * 0.4)
     
     choarier = choarierien[n_choarier]
     fill(choarier.liv)
     noStroke()
     circle(20, 20, 20)
-    fill(0)
+    fill(255)
     textSize(20)
     text(choarier.anv, 40, 27)
     
