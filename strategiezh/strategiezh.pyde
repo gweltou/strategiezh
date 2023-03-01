@@ -3,11 +3,15 @@
 from random import shuffle
 
 
+N = 8 # Niver a c'hellig dre kostez
+S = 25 # Ment pep kellig (e pixel)
+
+
 class Choarier:
     def __init__(self, anv, liv):
         self.anv = anv
         self.liv = liv
-        self.taol_kentan = True
+        self.n_taol = 0
 
 
 class Kellig:
@@ -15,8 +19,8 @@ class Kellig:
         self.pos = PVector(x, y)
         self.value = int(random(1, 6))
         self.dizoloet = False
-        self.amezog = set()
-        self.choarier = -1  # -1 m'a n'eo ket bet aloubet, niveren ar c'hoarier perc'hen mod-all
+        self.amezeien = set()
+        self.choarier = None  # 'None' m'a n'eo ket bet aloubet, niveren ar c'hoarier perc'hen mod-all
     
     def draw(self):
         # Fonksion galvet evit tresañ pep kellig
@@ -26,10 +30,18 @@ class Kellig:
             fill(val2 * 2, val2 * 4, val2 * 2.5)
             draw_hex(self.pos.x, self.pos.y, self.rad)
             
-            if self.choarier != -1:
+            if self.choarier != None:
                 # Tresañ merk liv ar c'hoarier n'eus aloubet ar c'hellig mañ
+                pushStyle()
                 fill(choarierien[self.choarier].liv)
-                circle(self.pos.x-10, self.pos.y+10, 10)
+                circle(self.pos.x, self.pos.y, S*1.4)
+                stroke(choarierien[self.choarier].liv)
+                strokeWeight(S*0.8)
+                for k in self.amezeien:
+                    if self.choarier == k.choarier:
+                        line(self.pos.x, self.pos.y, k.pos.x, k.pos.y)
+                popStyle()
+                
             fill(255)
             textSize(20)
             text(self.value, self.pos.x-5, self.pos.y+5)
@@ -63,15 +75,13 @@ def setup():
     n_choarier = 0
     
     # Amañ e vez dibabet ment an tablez
-    N = 8 # Niver a c'hellig dre kostez
-    S = 25 # Ment pep kellig (e pixel)
     sevel_kael(N, S)
     
     # Klask an amezeien tro-dro pep kellig
     for k1 in kelligou:
         for k2 in kelligou:
             if dist(k1.pos.x, k1.pos.y, k2.pos.x, k2.pos.y) < 2*S+5 and k1 != k2:
-                k1.amezog.add(k2)
+                k1.amezeien.add(k2)
 
 
 def draw():
@@ -116,18 +126,19 @@ def mousePressed():
         # Kliket eo bet war ur c'hellig
         
         is_valid_move = False
-        if tostan.dizoloet and tostan.choarier == -1:
+        if tostan.dizoloet and tostan.choarier == None:
             # Ar c'hoarier a aloub anezhi ma'z eo bet dizoloet ha m'a n'eo ket bet aloubet dija
             tostan.choarier = n_choarier
             is_valid_move = True
         elif not tostan.dizoloet:
-            # Dizoloiñ ar c'hellig ma n'eo ket bet dija
-            tostan.dizoloet = True
-            is_valid_move = True
+            if choarierien[n_choarier].n_taol == 0 and len(tostan.amezeien) < 6:
+                # Taol kentañ
+                tostan.dizoloet = True
+                is_valid_move = True
             
         if is_valid_move:
             # Dizoloiñ ar c'helligoù tro-dro
-            for k in tostan.amezog:
+            for k in tostan.amezeien:
                 k.dizoloet = True
             
             # Tremenet e vez d'ar c'hoarier da-heul
