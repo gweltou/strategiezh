@@ -20,7 +20,7 @@ class Kellig:
         self.value = int(random(1, 6))
         self.dizoloet = False
         self.amezeien = set()
-        self.choarier = None  # 'None' m'a n'eo ket bet aloubet, niveren ar c'hoarier perc'hen mod-all
+        self.aloubet_gant = None  # 'None' m'a n'eo ket bet aloubet, niveren ar c'hoarier perc'hen mod-all
     
     def draw(self):
         # Fonksion galvet evit tresañ pep kellig
@@ -30,15 +30,15 @@ class Kellig:
             fill(val2 * 2, val2 * 4, val2 * 2.5)
             draw_hex(self.pos.x, self.pos.y, self.rad)
             
-            if self.choarier != None:
+            if self.aloubet_gant != None:
                 # Tresañ merk liv ar c'hoarier n'eus aloubet ar c'hellig mañ
                 pushStyle()
-                fill(choarierien[self.choarier].liv)
+                fill(choarierien[self.aloubet_gant].liv)
                 circle(self.pos.x, self.pos.y, S*1.4)
-                stroke(choarierien[self.choarier].liv)
+                stroke(choarierien[self.aloubet_gant].liv)
                 strokeWeight(S*0.8)
                 for k in self.amezeien:
-                    if self.choarier == k.choarier:
+                    if self.aloubet_gant == k.choarier:
                         line(self.pos.x, self.pos.y, k.pos.x, k.pos.y)
                 popStyle()
                 
@@ -120,7 +120,9 @@ def draw():
 
 
 def mousePressed():
-    global n_choarier
+    # Niverenn ar c'hoarier,
+    # etre 0 (c'hoarier kentañ) ha 3 (evit ar pevare c'hoarier)
+    global n_choarier  
     
     if tostan:
         # Kliket eo bet war ur c'hellig
@@ -128,7 +130,7 @@ def mousePressed():
         is_valid_move = False
         if tostan.dizoloet and tostan.choarier == None:
             # Ar c'hoarier a aloub anezhi ma'z eo bet dizoloet ha m'a n'eo ket bet aloubet dija
-            tostan.choarier = n_choarier
+            tostan.aloubet_gant = n_choarier
             is_valid_move = True
         elif not tostan.dizoloet:
             if choarierien[n_choarier].n_taol == 0 and len(tostan.amezeien) < 6:
@@ -141,7 +143,7 @@ def mousePressed():
             for k in tostan.amezeien:
                 k.dizoloet = True
             
-            # Tremenet e vez d'ar c'hoarier da-heul
+            # Tremen d'ar c'hoarier da-heul
             n_choarier += 1
             if n_choarier >= len(choarierien):
                 n_choarier = 0
