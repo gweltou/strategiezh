@@ -34,11 +34,11 @@ class Kellig:
                 # Tresañ merk liv ar c'hoarier n'eus aloubet ar c'hellig mañ
                 pushStyle()
                 fill(choarierien[self.aloubet_gant].liv)
-                circle(self.pos.x, self.pos.y, S*1.4)
+                circle(self.pos.x, self.pos.y, S*1.3)
                 stroke(choarierien[self.aloubet_gant].liv)
-                strokeWeight(S*0.8)
+                strokeWeight(S*0.7)
                 for k in self.amezeien:
-                    if self.aloubet_gant == k.choarier:
+                    if self.aloubet_gant == k.aloubet_gant:
                         line(self.pos.x, self.pos.y, k.pos.x, k.pos.y)
                 popStyle()
                 
@@ -128,14 +128,19 @@ def mousePressed():
         # Kliket eo bet war ur c'hellig
         
         is_valid_move = False
-        if tostan.dizoloet and tostan.choarier == None:
+        if tostan.dizoloet and tostan.aloubet_gant == None:
             # Ar c'hoarier a aloub anezhi ma'z eo bet dizoloet ha m'a n'eo ket bet aloubet dija
-            tostan.aloubet_gant = n_choarier
-            is_valid_move = True
+            for k in tostan.amezeien: # Sellet m'az eo bet dija aloubet ur c'hellig amezeg  ### NEW
+                if k.aloubet_gant == n_choarier:   ### NEW
+                    tostan.aloubet_gant = n_choarier   ### NEW
+                    is_valid_move = True
+                    break   ### NEW
+        
         elif not tostan.dizoloet:
             if choarierien[n_choarier].n_taol == 0 and len(tostan.amezeien) < 6:
                 # Taol kentañ
                 tostan.dizoloet = True
+                tostan.aloubet_gant = n_choarier
                 is_valid_move = True
             
         if is_valid_move:
@@ -144,6 +149,7 @@ def mousePressed():
                 k.dizoloet = True
             
             # Tremen d'ar c'hoarier da-heul
+            choarierien[n_choarier].n_taol += 1
             n_choarier += 1
             if n_choarier >= len(choarierien):
                 n_choarier = 0
