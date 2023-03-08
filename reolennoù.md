@@ -1,6 +1,7 @@
 # Geriaoueg
  * Kellig : ul lec'h war ar gael
  * Tiriad : hollad ar c'helligoù aloubet gant ur c'hoarier ha staget etrezo. An tiriadoù hag a vez distaget dre un tagadenn eus peurest an tiriad (hag a chom liammet d'an orin) a vez kollet.
+ * Kellig "savet" : Ur c'hellig aloubet gant ur c'hoarier ha lec'h ma'z eo bet savet un "ti"/"uzin" evit gounit poentoù (hervez talvoud ar c'hellig).
 
 
 # Lore
@@ -10,7 +11,7 @@ Pal ar c'hoari a zo aloubiñ un enezenn gouez.
 # Reolennoù
 Pep c'hoarier a grog war ur c'hombod war bord an enezenn en ur c'hellig dibabet gant pep c'hoarier. N'eus ket tu da daou c'hoarier kregiñ war ar memes bord.
 Ar c'hellig a orin a dalv 1. Da lavaret eo e vo gounezet ur poent d'an nebeutañ gant pep c'hoarier pep tro.
-Dizoloet e vez ar c'helligoù tro-dro gant pep c'hoarier a-raok ma krogfe da vat ar c'hoari.
+Dizoloet e vez ar c'helligoù tro-dro kelligoù orin pep c'hoarier a-raok ma krogfe da vat ar c'hoari.
 
 Un talvoud a zo gant pep kellig : eus 1 betek 5.
 Pep tro e vez gounezet kement a poentoù ha talvoud ar c'helligoù e-lec'h m'ho peus savet un uzin.

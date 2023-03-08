@@ -44,7 +44,7 @@ class Kellig:
                 
             fill(255)
             textSize(20)
-            text(self.value, self.pos.x-5, self.pos.y+5)
+            text(self.value, self.pos.x-7, self.pos.y+7)
         else:
             n = noise(self.pos.x * 10, self.pos.y * 10) * 44
             fill(220-n, 230-n, 190-n)
