@@ -69,3 +69,70 @@ class Kellig:
 ![prototip3](skeudennou/20230301_19857.png)
 
 _Daoust-hag e vo merzet ar bug ganeoc'h ? ;)_
+
+
+## 8 Meurzh 2023
+
+### Kempen 'bug' sifr an talvoudoù
+
+```python
+def draw_talvoud(self):
+    # Skrivañ talvoud ar c'hellig a-us dezhi
+    if self.dizoloet == True:
+        fill(255)
+        textSize(20)
+        text(self.talvoud, self.pos.x-5, self.pos.y+5)
+```
+
+Er fonksion `draw` pennañ:
+
+```python
+# Tresañ ar c'hael a-bezh
+noStroke()
+for k in kelligou:
+    k.draw()
+for k in kelligou:
+    k.draw_talvoud()
+```
+
+### Ekonomiezh
+
+```python
+for k in kelligou:
+    if len(k.amezeien) < 6:
+        k.talvoud = 1
+    else:
+        r = random(100)
+        if r < 60:
+            k.talvoud = 1
+        elif r < 80:
+            k.talvoud = 2
+        elif r < 90:
+            k.talvoud = 3
+        elif r < 97:
+            k.talvoud = 4
+        else:
+            k.talvoud = 5
+```
+
+Reiñ poentoù da bep c'hoarier, da benn-kentañ e taol
+```python
+def mousePressed():
+    # ...
+    choarier = choarierien[n_choarier]
+    # ...
+    
+    if is_valid_move:
+        # Dizoloiñ ar c'helligoù tro-dro
+        for k in tostan.amezeien:
+            k.dizoloet = True
+        
+        # Tremen d'ar c'hoarier da-heul
+        choarier.n_taol += 1
+        n_choarier += 1
+        if n_choarier >= len(choarierien):
+            n_choarier = 0
+        
+        #Reiñ poentoù
+        choarier.poentou += 1
+```
