@@ -17,7 +17,7 @@ class Choarier:
 class Kellig:
     def __init__(self, x, y):
         self.pos = PVector(x, y)
-        self.value = int(random(1, 6))
+        self.talvoud = int(random(1, 6))
         self.dizoloet = False
         self.amezeien = set()
         self.aloubet_gant = None  # 'None' m'a n'eo ket bet aloubet, niveren ar c'hoarier perc'hen mod-all
@@ -26,7 +26,7 @@ class Kellig:
         # Fonksion galvet evit tresañ pep kellig
         
         if self.dizoloet:
-            val2 = self.value * self.value
+            val2 = self.talvoud * self.talvoud
             fill(val2 * 2, val2 * 4, val2 * 2.5)
             draw_hex(self.pos.x, self.pos.y, self.rad)
             
@@ -42,13 +42,15 @@ class Kellig:
                         line(self.pos.x, self.pos.y, k.pos.x, k.pos.y)
                 popStyle()
                 
-            fill(255)
-            textSize(20)
-            text(self.value, self.pos.x-7, self.pos.y+7)
         else:
             n = noise(self.pos.x * 10, self.pos.y * 10) * 44
             fill(220-n, 230-n, 190-n)
             draw_hex(self.pos.x, self.pos.y, self.rad)
+
+    def draw_talvoud(self):
+        fill(255)
+        textSize(20)
+        text(self.talvoud, self.pos.x-5, self.pos.y+5)
 
 
 
@@ -110,6 +112,8 @@ def draw():
     noStroke()
     for k in kelligou:
         k.draw()
+    for k in kelligou:
+        k.draw_talvoud()
     
     # Ad-tresañ an hini dindan al logodenn
     if tostan:
