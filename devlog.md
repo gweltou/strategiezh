@@ -73,9 +73,13 @@ _Daoust-hag e vo merzet ar bug ganeoc'h ? ;)_
 
 ## 8 Meurzh 2023
 
-### Kempen 'bug' sifr an talvoudoù
+### Kempenn 'bug' sifr an talvoudoù
+
+Echuet on oa, ar wech diwezhañ, en ul leuskel ur bugig grafik : sifr talvoud ar c'helligoù a oa kuzhet a-wechoù, abalamour ma veze treset linennoù ar c'helligoù amezeg a-us dezho.
+Evit kempenn ar gudenn-se eo bet ret deomp rannañ ar fonksion `Kellig.draw` evit dispartiañ tresañ ar gellig diouzh tresañ sifr an talvoudoù. Tennet eo bet neuze al linennoù kod a drese an talvoudoù ha lakaet int bet en ur fonksion nevez, anvet `Kellig.draw_talvoud`, adskrivet dindan :
 
 ```python
+# Kavet e vez ar fonskion se er c'hlas 'Kellig'
 def draw_talvoud(self):
     # Skrivañ talvoud ar c'hellig a-us dezhi
     if self.dizoloet == True:
@@ -84,7 +88,7 @@ def draw_talvoud(self):
         text(self.talvoud, self.pos.x-5, self.pos.y+5)
 ```
 
-Er fonksion `draw` pennañ:
+Galvet e vez ar fonksion nevez-se e diabarzh ar fonksion `draw` pennañ:
 
 ```python
 # Tresañ ar c'hael a-bezh
@@ -95,7 +99,15 @@ for k in kelligou:
     k.draw_talvoud()
 ```
 
-### Ekonomiezh
+Evel-se e vo treset an holl kelligoù penn-da-benn (pep c'hwec'hgornek, livioù ar c'hoarierien hag all) a-raok tresañ pep talvoud a-us.
+
+### Ur gael dizingal
+
+Jeneret e oa talvoudoù pep kellig eus ar gael en un doare ankivil. Pep kellig en doa ar memes probablentez da gaout un talvoud etre 1 ha 5. C'hoant on eus bremañ e vefe raloc'h an talvoudoù bras eget an talvoudoù bihan.
+Graet e vo se gant ar c'hod da-heul, lakaet er fonksion `setup`, war-lerc'h bezañ bet krouet ar gael.
+Lakaet e vez un talvoud '1' da bep kellig eus ar bord (anavezet int dre m'o deus nebeutoc'h eget 6 amezeg).
+Evit ar re all e vez goulennet un talvoud ankivil etre 0 ha 100, gant ar fonksion `random`, hag hervez an talvoud roet e vo dibabet talvoud ar gellig. Evel-se, 60% chañs vo da zibab an talvoud '1' evit ar gellig, 20% evit an talvoud '2', 10% evit an talvoud '3', 7% evit an talvoud '4' ha 3% evit an talvoud '5'.
+Un doare dispar da ziskouez implij ar framm `if`-`elif`-`else`.
 
 ```python
 for k in kelligou:
@@ -115,7 +127,10 @@ for k in kelligou:
             k.talvoud = 5
 ```
 
-Reiñ poentoù da bep c'hoarier, da benn-kentañ e taol
+### Gounid poentoù
+
+Brav ha plijus e krog da vezañ klikañ pep lec'h ha brasaat tiriad pep c'hoarier met n'ez eus c'hoari ebet c'hoazh. Poent eo reiñ poentoù da bep c'hoarier e penn-kentañ pep taol. Graet e vo se er fonksion `mousePressed`, ma'z eo bet graet un taol aotreet.
+
 ```python
 def mousePressed():
     # ...

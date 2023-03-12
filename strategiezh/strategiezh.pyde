@@ -26,6 +26,8 @@ def setup():
             if dist(k1.pos.x, k1.pos.y, k2.pos.x, k2.pos.y) < 2*S+5 and k1 != k2:
                 k1.amezeien.add(k2)
     
+    # Dasparzhañ talvoudoù ar gelligoù
+    # Talvoudoù bras a vo raloc'h eget talvoudoù bihan
     for k in kelligou:
         if len(k.amezeien) < 6:
             k.talvoud = 1
@@ -169,16 +171,14 @@ class Choarier:
                     for amezeg in k.amezeien:
                         if amezeg.aloubet_gant == self and k.talvoud <= self.poentou:
                             self.taoliou_aloubin.add(k)
-                            break
-        print(self.taoliou_aloubin)
-            
+                            break            
         
 
 class Kellig:
     def __init__(self, x, y):
         self.pos = PVector(x, y)
         self.talvoud = 0
-        self.dizoloet = False
+        self.dizoloet = True
         self.amezeien = set()
         self.aloubet_gant = None  # 'None' m'a n'eo ket bet aloubet, ar c'hoarier perc'hen mod-all (class Choarier)
     
