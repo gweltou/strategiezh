@@ -76,9 +76,9 @@ _Daoust-hag e vo merzet ar bug ganeoc'h ? ;)_
 ### Kempenn 'bug' sifr an talvoudoù
 
 Echuet on oa, ar wech diwezhañ, en ul leuskel ur bugig grafik : sifr talvoud ar c'helligoù a oa kuzhet a-wechoù, abalamour ma veze treset linennoù ar c'helligoù amezeg a-us dezho.
-Evit kempenn ar gudenn-se eo bet ret deomp rannañ ar fonksion `Kellig.draw` evit dispartiañ tresañ ar gellig diouzh tresañ sifr an talvoudoù. Tennet eo bet neuze al linennoù kod a drese an talvoudoù ha lakaet int bet en ur fonksion nevez, anvet `Kellig.draw_talvoud`, adskrivet dindan :
+Evit kempenn ar gudenn-se eo bet ret deomp rannañ ar fonksion <code>Kellig.draw</code> evit dispartiañ tresañ ar gellig diouzh tresañ sifr an talvoudoù. Tennet eo bet neuze al linennoù kod a drese an talvoudoù ha lakaet int bet en ur fonksion nevez, anvet <code>Kellig.draw_talvoud</code>, adskrivet dindan :
 
-```python
+```python3
 # Kavet e vez ar fonskion se er c'hlas 'Kellig'
 def draw_talvoud(self):
     # Skrivañ talvoud ar c'hellig a-us dezhi
@@ -88,9 +88,9 @@ def draw_talvoud(self):
         text(self.talvoud, self.pos.x-5, self.pos.y+5)
 ```
 
-Galvet e vez ar fonksion nevez-se e diabarzh ar fonksion `draw` pennañ:
+Galvet e vez ar fonksion nevez-se e diabarzh ar fonksion <code>draw</code> pennañ:
 
-```python
+```python3
 # Tresañ ar c'hael a-bezh
 noStroke()
 for k in kelligou:
@@ -101,13 +101,13 @@ for k in kelligou:
 
 Evel-se e vo treset an holl kelligoù penn-da-benn (pep c'hwec'hgornek, livioù ar c'hoarierien hag all) a-raok tresañ pep talvoud a-us.
 
-### Ur gael dizingal
+### Ur gael gant kelligoù dizingal
 
 Jeneret e oa talvoudoù pep kellig eus ar gael en un doare ankivil. Pep kellig en doa ar memes probablentez da gaout un talvoud etre 1 ha 5. C'hoant on eus bremañ e vefe raloc'h an talvoudoù bras eget an talvoudoù bihan.
-Graet e vo se gant ar c'hod da-heul, lakaet er fonksion `setup`, war-lerc'h bezañ bet krouet ar gael.
+Graet e vo se gant ar c'hod da-heul, lakaet er fonksion <code>setup</code>, war-lerc'h bezañ bet krouet ar gael.
 Lakaet e vez un talvoud '1' da bep kellig eus ar bord (anavezet int dre m'o deus nebeutoc'h eget 6 amezeg).
-Evit ar re all e vez goulennet un talvoud ankivil etre 0 ha 100, gant ar fonksion `random`, hag hervez an talvoud roet e vo dibabet talvoud ar gellig. Evel-se, 60% chañs vo da zibab an talvoud '1' evit ar gellig, 20% evit an talvoud '2', 10% evit an talvoud '3', 7% evit an talvoud '4' ha 3% evit an talvoud '5'.
-Un doare dispar da ziskouez implij ar framm `if`-`elif`-`else`.
+Evit ar re all e vez goulennet un talvoud ankivil etre 0 ha 100, gant ar fonksion <code>random</code>, hag hervez an talvoud roet e vo dibabet talvoud ar gellig. Evel-se, 60% chañs vo da zibab an talvoud '1' evit ar gellig, 20% evit an talvoud '2', 10% evit an talvoud '3', 7% evit an talvoud '4' ha 3% evit an talvoud '5'.
+Un doare dispar da ziskouez implij ar framm <code>if</code>-<code>elif</code>-<code>else</code>.
 
 ```python
 for k in kelligou:
@@ -129,7 +129,7 @@ for k in kelligou:
 
 ### Gounid poentoù
 
-Brav ha plijus e krog da vezañ klikañ pep lec'h ha brasaat tiriad pep c'hoarier met n'ez eus c'hoari ebet c'hoazh. Poent eo reiñ poentoù da bep c'hoarier e penn-kentañ pep taol. Graet e vo se er fonksion `mousePressed`, ma'z eo bet graet un taol aotreet.
+Brav ha plijus e krog da vezañ klikañ pep lec'h ha brasaat tiriad pep c'hoarier met n'ez eus c'hoari ebet c'hoazh. Poent eo reiñ poentoù da bep c'hoarier e penn-kentañ pep taol. Graet e vo se er fonksion <code>mousePressed</code>, ma'z eo bet graet un taol aotreet.
 
 ```python
 def mousePressed():
@@ -138,16 +138,32 @@ def mousePressed():
     # ...
     
     if is_valid_move:
-        # Dizoloiñ ar c'helligoù tro-dro
-        for k in tostan.amezeien:
-            k.dizoloet = True
+        # ...
         
         # Tremen d'ar c'hoarier da-heul
         choarier.n_taol += 1
-        n_choarier += 1
         if n_choarier >= len(choarierien):
             n_choarier = 0
         
         #Reiñ poentoù
         choarier.poentou += 1
+```
+
+### Diskouez an taolioù aotreet gant un efed blinkañ
+
+N'eo ket anat kompren petra e vez gortozet digant ar c'hoarier, dreist-holl keit ma ne vez "tuto" ebet pe den ebet da zisplegañ deoc'h ar reolennoù.
+Sikour a ra kalz lakaat war vel an taolioù aotreet, gant un efed grafik simpl.
+Ar fonksion <code>cos</code>(inus) he deus ur perzh _gwagenniñ_ hag a adkas talvoudoù bevennet etre -1 ha 1. Implijet e vo ar fonksion-se evit kemm treuzwelusted al liv a vo lakaet a-us ar c'helligoù a c'hell ar c'hoarier aloubiñ.
+E penn kentañ pep tro e vo klasket, gant ar fonksion <code>Choarier.update_taoliou_aloubin</code> listennad ar c'helligoù a c'hell bezañ aloubet gant ar c'hoarier (ar re a zo tro-dro dezhañ, ma'z int dieub ha ma'z int "mac'hamat" a-walc'h)
+Er fonksion <code>draw</code> pennañ e vo kavet neuze :
+
+```python
+for k in kelligou:
+        k.draw()
+for k in choarier.taoliou_aloubin:
+    # Livañ a-us d'ar c'helligoù a c'hell bezañ aloubet gant ar c'hoarier
+    fill(choarier.liv, (1+cos(t_choarier * 0.1) * 60))
+    draw_hex(k.pos.x, k.pos.y, k.rad)
+for k in kelligou:
+    k.draw_talvoud()
 ```

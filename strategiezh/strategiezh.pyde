@@ -66,12 +66,13 @@ def setup():
 
 def draw():
     global tostan
+    global t_choarier
     
     background(220 * 0.4, 230 * 0.4, 190 * 0.4)
     
     choarier = choarierien[n_choarier]
-    
-    
+    t_choarier += 1
+        
     # Klask ar c'hellig an tostañ eus ar logodenn
     min_dist = 999.0
     tostan = None
@@ -86,10 +87,9 @@ def draw():
     for k in kelligou:
         k.draw()
     for k in choarier.taoliou_aloubin:
-        if k.talvoud <= choarier.poentou:
-            # Livañ a-us d'ar c'helligoù a c'hell bezañ aloubet gant ar c'hoarier
-            fill(choarier.liv, (1+sin(frameCount * 0.09) * 60))
-            draw_hex(k.pos.x, k.pos.y, k.rad)
+        # Livañ a-us d'ar c'helligoù a c'hell bezañ aloubet gant ar c'hoarier
+        fill(choarier.liv, (1+cos(t_choarier * 0.1) * 60))
+        draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in kelligou:
         k.draw_talvoud()
     
@@ -139,6 +139,8 @@ def next_player():
     # etre 0 (c'hoarier kentañ) ha 3 (evit ar pevare c'hoarier)
     global n_choarier
     
+    global t_choarier # Amzer o tremen e kerz tro ar c'hoarier
+    
     # Tremen d'ar c'hoarier da-heul
     n_choarier += 1
     if n_choarier >= len(choarierien):
@@ -146,6 +148,8 @@ def next_player():
     
     choarier = choarierien[n_choarier]
     choarier.update_taoliou_aloubin()
+    
+    t_choarier = 0
     
     #Reiñ poentoù
     choarier.poentou += 1
@@ -160,6 +164,8 @@ class Choarier:
         self.taoliou_aloubin = set()
     
     def update_taoliou_aloubin(self):
+        # Dizoloiñ an taolioù aloubin posupl e pep tro
+        
         if self.n_taol == 0:
             for k in kelligou:
                 if len(k.amezeien) < 6 and k.aloubet_gant == None:
