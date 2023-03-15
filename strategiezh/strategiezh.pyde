@@ -82,7 +82,7 @@ def draw():
             min_dist = d
             tostan = k
     
-    # Tresañ ar c'hael a-bezh
+    # Tresañ ar gael a-bezh
     noStroke()
     for k in kelligou:
         k.draw()
@@ -121,12 +121,15 @@ def mousePressed():
             choarier.poentou -= tostan.talvoud
             is_valid_move = True
         
+        elif tostan.aloubet_gant != None and tostan.aloubet_gant != choarier and choarier.poentou >= tostan.talvoud:
+            tostan.aloubet_gant = choarier
+            choarier.poentou -= tostan.talvoud * 2 # - talvoud ar kelligou-dit tro dro*
+            is_valid_move = True
+        
         if is_valid_move:
             # Dizoloiñ ar c'helligoù tro-dro
-            for k in tostan.amezeien:
-                k.dizoloet = True
-            
-            choarier.n_taol += 1
+            #for k in tostan.amezeien:
+            #    k.dizoloet = True
             next_player()
     
     else:
@@ -150,7 +153,7 @@ def next_player():
     choarier.update_taoliou_aloubin()
     
     t_choarier = 0
-    
+    choarier.n_taol += 1
     #Reiñ poentoù
     choarier.poentou += 1
 
