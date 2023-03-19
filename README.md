@@ -1,7 +1,7 @@
 # Strategiezh
 Ur c'hoari video strategiezh a vez savet er stal urzhiataerezh al lise Diwan, bloavezh 2022-23.
 
-Graet gant sikour Paolig Bosser An Dren (2vet ruz) ha Matilin Bescond (2vet ruz).
+Graet gant sikour Aelig, Eugène, Matilin ha Paolig.
 
 Ar yezh implijet a zo Python ha Processing an endro programiñ.
 
