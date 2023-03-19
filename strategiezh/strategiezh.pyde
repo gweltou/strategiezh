@@ -5,6 +5,7 @@ from random import shuffle
 
 N = 4 # Niver a c'hellig dre kostez
 S = 45 # Ment pep kellig (e pixel)
+NIVER_CHOARIERIEN = 3
 
 
 kelligou = []
@@ -12,9 +13,6 @@ choarierien = []
 
 
 def setup():
-    global n_choarier
-    global n_taol
-
     size(600, 600)
     #fullScreen()
     
@@ -31,42 +29,17 @@ def setup():
             if dist(k1.pos.x, k1.pos.y, k2.pos.x, k2.pos.y) < 2*S+5 and k1 != k2:
                 k1.amezeien.add(k2)
     
-    # Dasparzhañ talvoudoù ar gelligoù
-    # Talvoudoù bras a vo raloc'h eget talvoudoù bihan
-    for k in kelligou:
-        if len(k.amezeien) < 6:
-            k.talvoud = 1
-            k.dizoloet = True
-        else:
-            r = random(100)
-            if r < 60:
-                k.talvoud = 1
-            elif r < 80:
-                k.talvoud = 2
-            elif r < 90:
-                k.talvoud = 3
-            elif r < 97:
-                k.talvoud = 4
-            else:
-                k.talvoud = 5
+    #krouiñ a raer ar geriadur destenn_fons a tap tout an titouroù
+    global testenn_fons #bezet destenn_fons, ar geriadur a tap tout an titouroù diwar benn an destenn
+    testenn_fons = {}
+    testenn_fons["x"] = random(500)
+    testenn_fons["y"] = random(500)
+    testenn_fons["testenn"] = "Sikour !"
+    testenn_fons["ment"] = 50
+    testenn_fons["finv x"] = (random(1,2)/5)
+    testenn_fons["finv y"] = (random(1,2)/5)
     
-    
-    # Krouiñ c'hoarierien
-    NIVER_CHOARIERIEN = 3
-    liviou = [
-              color(130, 180, 30),
-              color(30, 240, 50),
-              color(240, 30, 240),
-              color(120, 127, 220),
-              color(255, 90, 110),
-              color(100, 240, 240)
-            ]
-    shuffle(liviou)    # Meskañ al livioù
-    for i in range(NIVER_CHOARIERIEN):
-        choarierien.append(Choarier("C'hoarier " + str(i+1), liviou[i]))
-    n_choarier = -1
-    n_taol = 1
-    next_player()
+    init_game()
 
 
 def draw():
@@ -74,6 +47,16 @@ def draw():
     global t_choarier
     
     background(220 * 0.4, 230 * 0.4, 190 * 0.4)
+    
+    #skrivañ a raer an titl a-dreñv
+    textSize(testenn_fons["ment"])#renkañ ment an destenn
+    if ((testenn_fons["x"] <= 1) or (testenn_fons["x"] >= 499)):  
+        testenn_fons["finv x"] = 0-testenn_fons["finv x"]
+    if ((testenn_fons["y"] <= 30)or (testenn_fons["y"] >= 499)):
+        testenn_fons["finv y"] = 0-testenn_fons["finv y"]
+    testenn_fons["x"] += testenn_fons["finv x"]
+    testenn_fons["y"] += testenn_fons["finv y"]
+    text(testenn_fons["testenn"],testenn_fons["x"],testenn_fons["y"])
     
     choarier = choarierien[n_choarier]
     t_choarier += 1
@@ -93,15 +76,15 @@ def draw():
         k.draw()
     for k in choarier.taoliou_aloubin:
         # Livañ ar c'helligoù a c'hell bezañ aloubet gant ar c'hoarier
-        fill(choarier.liv, (1+sin(t_choarier * 0.07 - PI*0.25) * 60))
+        fill(choarier.liv, (1+sin(t_choarier * 0.07 - PI*0.25) * 50))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in choarier.taoliou_sevel:
-        # Livañ ar c'helligoù a c'hell bezañ aloubet gant ar c'hoarier
-        fill(120, 255, 120, (1+sin(t_choarier * 0.07) * 60))
+        # Livañ ar c'helligoù lec'h ma c'hell ar c'hoarier sevel un uzin
+        fill(120, 255, 120, (1+sin(t_choarier * 0.07) * 70))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in choarier.taoliou_tagan:
         # Livañ ar c'helligou a c'hell bezañ taget
-        fill(255, 120, 120, (1+sin(t_choarier * 0.07 - HALF_PI) * 60))
+        fill(255, 100, 100, (1+sin(t_choarier * 0.07 - HALF_PI) * 80))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in kelligou:
         k.draw_above()
@@ -139,18 +122,22 @@ def mousePressed():
             is_valid_move = True
             if n_taol == 1:
                 tostan.aloubet_gant = choarier
-                choarier.uzinou.append(tostan)
+                #choarier.uzinou.append(tostan)
                 tostan.is_uzin = True
         
         #elif tostan.aloubet_gant != None and tostan.aloubet_gant != choarier and choarier.poentou >= 2 * tostan.talvoud:
         elif tostan in choarier.taoliou_tagan:
+            enebour = tostan.aloubet_gant
             tostan.aloubet_gant = choarier
             tostan.is_uzin = False
             choarier.poentou -= tostan.talvoud * 2
+            # Distrujañ tiriadoù ar c'hoarier taget
+            enebour.trochan()
             is_valid_move = True
+            
         elif tostan in choarier.taoliou_sevel:
             tostan.is_uzin = True
-            choarier.uzinou.append(tostan)
+            #choarier.uzinou.append(tostan)
             choarier.poentou -= tostan.talvoud * 2
             is_valid_move = True
     else:
@@ -164,6 +151,51 @@ def mousePressed():
             #    k.dizoloet = True
             next_player()
 
+
+def init_game():
+    # (Ad)kregiñ ar partienn
+    global choarierien
+    global n_choarier
+    global n_taol
+    
+    # Dasparzhañ talvoudoù ar gelligoù
+    # Talvoudoù bras a vo raloc'h eget talvoudoù bihan
+    for k in kelligou:
+        k.aloubet_gant = None
+        k.is_uzin = False
+        if len(k.amezeien) < 6:
+            k.talvoud = 1
+            k.dizoloet = True
+        else:
+            r = random(100)
+            if r < 60:
+                k.talvoud = 1
+            elif r < 80:
+                k.talvoud = 2
+            elif r < 90:
+                k.talvoud = 3
+            elif r < 97:
+                k.talvoud = 4
+            else:
+                k.talvoud = 5
+    
+    # Krouiñ c'hoarierien
+    liviou = [
+              color(130, 180, 30),
+              color(30, 240, 70),
+              color(240, 30, 240),
+              color(120, 127, 220),
+              color(255, 90, 110),
+              color(100, 240, 240)
+            ]
+    shuffle(liviou)    # Meskañ al livioù
+    choarierien = []
+    for i in range(NIVER_CHOARIERIEN):
+        choarierien.append(Choarier("C'hoarier " + str(i+1), liviou[i]))
+    n_choarier = -1
+    n_taol = 1
+    next_player()
+    
 
 def next_player():
     global n_choarier # Niverenn ar c'hoarier
@@ -184,7 +216,7 @@ def next_player():
         if k.aloubet_gant == choarier and k.is_uzin:
             choarier.poentou += k.talvoud
 
-    choarier.update_taoliou()
+    choarier.update()
 
 
 class Choarier:
@@ -192,13 +224,32 @@ class Choarier:
         self.anv = anv
         self.liv = liv
         self.poentou = 1
-        self.taoliou_aloubin = set()
-        self.taoliou_sevel = set()
-        self.taoliou_tagan = set()
-        self.uzinou = []
     
-    def update_taoliou(self):
+    def trochan(self):
+        # Mirout an tiriadoù liammet da uzinoù nemetken
+        self.update()
+            
+        liammet = set()
+        da_liamman = self.uzinou[:]
+        while len(da_liamman) > 0:
+            kellig = da_liamman.pop()
+            liammet.add(kellig)
+            for amezeg in kellig.amezeien:
+                if amezeg.aloubet_gant == self and amezeg not in liammet:
+                    da_liamman.append(amezeg)
+        
+        da_zieubin = set(self.kelligou_aloubet).difference(liammet)
+        for k in da_zieubin:
+            k.aloubet_gant = None
+    
+    
+    def update(self):
         # Dizoloiñ an taolioù posupl e pep tro
+        self.taoliou_aloubin = set()
+        self.taoliou_tagan = set()
+        self.taoliou_sevel = []
+        self.kelligou_aloubet = []
+        self.uzinou = []
         
         if n_taol == 1:
             # Kentañ taol, kelligoù ar vord a c'hell bezañ aloubet
@@ -212,13 +263,15 @@ class Choarier:
                     if not re_tost:
                         self.taoliou_aloubin.add(k)
         else:
-            self.taoliou_aloubin.clear()
-            self.taoliou_tagan.clear()
-            self.taoliou_sevel.clear()
             for k in kelligou:
                 if k.aloubet_gant == self:
-                    if not k.is_uzin and self.poentou >= k.talvoud * 2:
-                        self.taoliou_sevel.add(k)                    
+                    self.kelligou_aloubet.append(k)
+                    
+                    if k.is_uzin:
+                        self.uzinou.append(k)
+                    elif self.poentou >= k.talvoud * 2:
+                        self.taoliou_sevel.append(k)       
+                                     
                     for amezeg in k.amezeien:
                         # Toud ar gelligoù a zo tro-dro d'ar c'hoarier
                         if amezeg.aloubet_gant == None:
@@ -254,7 +307,7 @@ class Kellig:
                 else:
                     circle(self.pos.x, self.pos.y, S*1.0)
                 stroke(self.aloubet_gant.liv)
-                strokeWeight(S*0.6)
+                strokeWeight(S*0.5)
                 for k in self.amezeien:
                     if self.aloubet_gant == k.aloubet_gant:
                         line(self.pos.x, self.pos.y, k.pos.x, k.pos.y)
@@ -327,7 +380,10 @@ def sevel_kael(n, rad):
     
     
 def keyPressed():
-    # Saveteet e vez ur poltred-skramm
     if key == 'p':
+        # Saveteet e vez ur poltred-skramm
         saveFrame("strategiezh_###.png")
         println("Poltred-scramm saveteet")
+    elif key == 'r':
+        # Adkregiñ ar c'hoari
+        init_game()
