@@ -1,10 +1,31 @@
 #ANV AR C'HOARI
 
+
+"""
+    Da ober :
+     * Diskouez ar probablentez gounid an tagadenn a-us d'ar gelligoù taget
+     * Reiñ ur bonus difenn evit an uzinoù
+     * Daoust-hag e vefe kontet talvoudoù ar gelligoù tro-dro evit jediñ ar bonus tagañ/difenn ?
+     * Lakaat kemennoù sikour e plas skrid ar foñs.
+        - tro 1: aloubit ur gellig eus ar vord
+        - tro 2: talvoud pep kellig a zo skrivet warni
+        - tro 3: klikit en diavaez m'ho peus c'hoant paseal ho tro hag espern poentoù
+        - tro 4: Savit uzinoù evit gounid poentoù bep tro
+        - tro 5: Un uzin a roioù bep tro kement a poentoù eget e dalvoud
+        - tro 6: Distrujit uzinoù ar re all evit gounid ar partienn
+        - tro 7:
+     * Lakaat an destenn sikour da zirolliñ en traoñ nemetken (evel er skinwel)
+     * Cheñch ar fonksion `draw_uzin` evit ma vefe kreizennet an tresadenn war an daveenoù roet e arguzenn.
+     * Kavout efedoù son simpl.
+"""
+
+
+
 from random import shuffle
 
 
 N = 4 # Niver a c'hellig dre kostez
-S = 45 # Ment pep kellig (e pixel)
+S = 44 # Ment pep kellig (e pixel)
 NIVER_CHOARIERIEN = 3
 
 
@@ -34,7 +55,7 @@ def setup():
     testenn_fons = {}
     testenn_fons["x"] = random(500)
     testenn_fons["y"] = random(500)
-    testenn_fons["testenn"] = "Sikour !"
+    testenn_fons["testenn"] = "Demat"
     testenn_fons["ment"] = 50
     testenn_fons["finv x"] = (random(1,2)/5)
     testenn_fons["finv y"] = (random(1,2)/5)
@@ -42,11 +63,17 @@ def setup():
     init_game()
 
 
+
 def draw():
     global tostan
     global t_choarier
+    choarier = choarierien[n_choarier]
+    t_choarier += 1  # An amzer o tremen abaoe penn-kentañ tro ar c'hoarier (e 1/30 eilenn)
     
-    background(220 * 0.4, 230 * 0.4, 190 * 0.4)
+    # Livañ ar foñs
+    background(0)
+    fill(choarier.liv, 150)
+    rect(0, 0, width, height)
     
     #skrivañ a raer an titl a-dreñv
     textSize(testenn_fons["ment"])#renkañ ment an destenn
@@ -57,9 +84,6 @@ def draw():
     testenn_fons["x"] += testenn_fons["finv x"]
     testenn_fons["y"] += testenn_fons["finv y"]
     text(testenn_fons["testenn"],testenn_fons["x"],testenn_fons["y"])
-    
-    choarier = choarierien[n_choarier]
-    t_choarier += 1
         
     # Klask ar c'hellig an tostañ eus ar logodenn
     min_dist = 999.0
@@ -76,15 +100,15 @@ def draw():
         k.draw()
     for k in choarier.taoliou_aloubin:
         # Livañ ar c'helligoù a c'hell bezañ aloubet gant ar c'hoarier
-        fill(choarier.liv, (1+sin(t_choarier * 0.07 - PI*0.25) * 50))
+        fill(80, 255, 80, ((1.4+sin(t_choarier * 0.08 - PI*0.25)) * 50))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in choarier.taoliou_sevel:
         # Livañ ar c'helligoù lec'h ma c'hell ar c'hoarier sevel un uzin
-        fill(120, 255, 120, (1+sin(t_choarier * 0.07) * 70))
+        fill(180, 250, 40, ((1.4+sin(t_choarier * 0.08)) * 50))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in choarier.taoliou_tagan:
         # Livañ ar c'helligou a c'hell bezañ taget
-        fill(255, 100, 100, (1+sin(t_choarier * 0.07 - HALF_PI) * 80))
+        fill(255, 80, 80, ((1.4+sin(t_choarier * 0.08 - HALF_PI)) * 50))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in kelligou:
         k.draw_above()
@@ -92,20 +116,21 @@ def draw():
     # Ad-tresañ an hini dindan al logodenn met ruz ha damdreuzwelus
     if tostan:
         noStroke()
-        fill(120, 100)
+        fill(250, 100)
         draw_hex(tostan.pos.x, tostan.pos.y, tostan.rad)
     
     # HUD ar c'hoarier
-    fill(choarier.liv)
+    fill(choarier.liv, 80)
     noStroke()
-    circle(20, 20, 35)
-    fill(255)
-    textSize(20)
-    text(choarier.anv, 40, 27)
-    text(choarier.poentou, 14, 27)
-    fill(255)
+    circle(40, 30, 180)
+    fill(255, 250)
+    textSize(70)
+    text(choarier.poentou, 28, 80)
+    fill(255, 190)
     textSize(25)
-    text("Tro: " + str(n_taol), width-110, 27)
+    text(choarier.anv, 150, 34)
+    textSize(25)
+    text("Tro: " + str(n_taol), width-110, 30)
 
 
 
@@ -115,7 +140,7 @@ def mousePressed():
     is_valid_move = False
     
     if tostan:
-        # Kliket eo bet war ur c'hellig
+        # Kliket eo bet war ur gellig
         if tostan in choarier.taoliou_aloubin:
             tostan.aloubet_gant = choarier
             choarier.poentou -= tostan.talvoud
@@ -125,15 +150,30 @@ def mousePressed():
                 #choarier.uzinou.append(tostan)
                 tostan.is_uzin = True
         
-        #elif tostan.aloubet_gant != None and tostan.aloubet_gant != choarier and choarier.poentou >= 2 * tostan.talvoud:
         elif tostan in choarier.taoliou_tagan:
             enebour = tostan.aloubet_gant
-            tostan.aloubet_gant = choarier
-            tostan.is_uzin = False
-            choarier.poentou -= tostan.talvoud * 2
-            # Distrujañ tiriadoù ar c'hoarier taget
-            enebour.trochan()
+            n_tager = 0
+            n_difenner = 0
+            for k in tostan.amezeien:
+                if k.aloubet_gant == choarier:
+                    n_tager = n_tager + 1
+                elif k.aloubet_gant == enebour:
+                    n_difenner = n_difenner + 1
+            skor_tagan = 2 * tostan.talvoud + n_tager
+            skor_difenn = 2 * tostan.talvoud + n_difenner
+            skor_hollek = (skor_tagan - skor_difenn)/5.0
+            skor_hollek = max(-0.5, min(skor_hollek, 0.5))
+            feur_gounid = (0.5 + skor_hollek)*100
+            print(feur_gounid, n_tager, n_difenner)
+            if random(0, 100) < feur_gounid :
+                tostan.is_uzin = False
+                tostan.aloubet_gant = choarier
+                # Distrujañ tiriadoù ar c'hoarier taget
+                enebour.trochan()
+                
             is_valid_move = True
+            # Paeañ priz an tagadenn
+            choarier.poentou -= tostan.talvoud * 2
             
         elif tostan in choarier.taoliou_sevel:
             tostan.is_uzin = True
@@ -165,19 +205,25 @@ def init_game():
         k.is_uzin = False
         if len(k.amezeien) < 6:
             k.talvoud = 1
+            k.tliv = 1
             k.dizoloet = True
         else:
             r = random(100)
-            if r < 60:
+            if r < 50:
                 k.talvoud = 1
-            elif r < 80:
+                k.tliv = 1
+            elif r < 70:
                 k.talvoud = 2
-            elif r < 90:
+                k.tliv = 5
+            elif r < 81:
                 k.talvoud = 3
-            elif r < 97:
+                k.tliv = 10
+            elif r < 93:
                 k.talvoud = 4
+                k.tliv = 18
             else:
                 k.talvoud = 5
+                k.tliv = 24
     
     # Krouiñ c'hoarierien
     liviou = [
@@ -285,6 +331,7 @@ class Kellig:
     def __init__(self, x, y):
         self.pos = PVector(x, y)
         self.talvoud = 0
+        self.tliv = 0
         self.dizoloet = True
         self.amezeien = set()
         self.aloubet_gant = None  # 'None' m'a n'eo ket bet aloubet, ar c'hoarier perc'hen mod-all (class Choarier)
@@ -294,12 +341,12 @@ class Kellig:
         # Fonksion galvet evit tresañ pep kellig
         
         if self.dizoloet:
-            val2 = self.talvoud * self.talvoud
-            fill(val2 * 2, val2 * 4, val2 * 2.5)
+            
+            fill(110 - self.tliv * 1.2, 110 - self.tliv * 1, 130 - self.tliv * 3)
             draw_hex(self.pos.x, self.pos.y, self.rad)
             
             if self.aloubet_gant != None:
-                # Tresañ merk liv ar c'hoarier n'eus aloubet ar c'hellig mañ
+                # Tresañ merk liv ar c'hoarier 'n eus aloubet ar c'hellig mañ
                 pushStyle()
                 fill(self.aloubet_gant.liv)
                 if self.is_uzin:
@@ -325,7 +372,7 @@ class Kellig:
                 fill(30, 30, 0, 100)
                 draw_uzin(int(self.pos.x - S*0.425), int(self.pos.y - S*0.425), S*0.85)
             fill(255)
-            textSize(20)
+            textSize(22)
             text(self.talvoud, self.pos.x-7, self.pos.y+7)
 
 
