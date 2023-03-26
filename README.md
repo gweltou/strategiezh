@@ -13,4 +13,4 @@ M'ho peus c'hoant dizoloiñ an doare m'eo bet savet ar c'hoari-se e c'hellit len
 
 ![C'hoari paper](skeudennou/20230104_165637.jpg)
 
-![prototip](skeudennou/20230301_19857.png)
+![prototip](skeudennou/strategiezh_230326.png)
