@@ -3,9 +3,8 @@
 
 """
     Da ober :
-     * Diskouez ar probablentez gounid an tagadenn a-us d'ar gelligoù taget
-     * Reiñ ur bonus difenn evit an uzinoù
-     * Daoust-hag e vefe kontet talvoudoù ar gelligoù tro-dro evit jediñ ar bonus tagañ/difenn ?
+     * Kavout un typo (skritur) bravoc'h
+     * Reiñ ur bonus difenn evit an uzinoù (1 poent difenn ouzhpenn)
      * Lakaat kemennoù sikour e plas skrid ar foñs.
         - tro 1: aloubit ur gellig eus ar vord
         - tro 2: talvoud pep kellig a zo skrivet warni
