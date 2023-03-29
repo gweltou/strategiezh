@@ -117,12 +117,26 @@ def draw():
     # Ad-tresañ an hini dindan al logodenn met ruz ha damdreuzwelus
     if tostan:
         noStroke()
-        fill(250, 100)
+        fill(250, 60)
         draw_hex(tostan.pos.x, tostan.pos.y, tostan.rad)
     
+    # Skrivañ ar feurioù tagan a-us d'ar gelligoù
+    textSize(18)
+    fill(255, 180, 110)
+    for k in choarier.feuriou_tagan:
+        fg = choarier.feuriou_tagan[k]
+        txt = str(int(round(fg))) + '%'
+        tw = textWidth(txt)
+        text(txt, k.pos.x - tw*0.5, k.pos.y + S*0.7)
+    
     # HUD ar c'hoarier
-    fill(choarier.liv, 80)
     noStroke()
+    # Adtreset e vez div wech ar c'helc'h poentoù,
+    # Ur wech kentañ e du, evit kuzat ar pezh zo a-dreñv (an destenn o tremen)
+    # Hag un eil wech, damtreuzwelus, evit kaout ul liv un tamm sklaeroc'h eget ar foñs
+    fill(0)
+    circle(40, 30, 180)
+    fill(choarier.liv, 190)
     circle(40, 30, 180)
     fill(255, 250)
     textSize(70)
@@ -151,22 +165,12 @@ def mousePressed():
                 tostan.is_uzin = True
             choarier.update()
         elif tostan in choarier.taoliou_tagan:
-            enebour = tostan.aloubet_gant
-            skor_tagan = 0
-            skor_difenn = 2 * tostan.talvoud
-            for k in tostan.amezeien:
-                if k.aloubet_gant == choarier:
-                    skor_tagan = skor_tagan + k.talvoud
-                elif k.aloubet_gant == enebour:
-                    skor_difenn = skor_difenn + k.talvoud
-            skor_hollek = (skor_tagan - skor_difenn)/8.0
-            skor_hollek = max(-0.5, min(skor_hollek, 0.5))
-            feur_gounid = (0.5 + skor_hollek)*100
-            print(feur_gounid, skor_tagan, skor_difenn)
+            feur_gounid = choarier.feuriou_tagan[tostan]
             if random(0, 100) < feur_gounid :
                 tostan.is_uzin = False
                 tostan.aloubet_gant = choarier
                 # Distrujañ tiriadoù ar c'hoarier taget
+                enebour = tostan.aloubet_gant
                 enebour.trochan()
                 
             # Paeañ priz an tagadenn
@@ -299,6 +303,7 @@ class Choarier:
         self.taoliou_sevel = []
         self.kelligou_aloubet = []
         self.uzinou = []
+        self.feuriou_tagan = dict()
         
         if n_taol == 1 and self.poentou == 1:
             # Kentañ taol, kelligoù ar vord a c'hell bezañ aloubet
@@ -327,6 +332,20 @@ class Choarier:
                             if self.poentou >= amezeg.talvoud:
                                 self.taoliou_aloubin.add(amezeg)                          
                         elif amezeg.aloubet_gant != self and self.poentou >= amezeg.talvoud * 2:
+                            # A-walc'h a poentoù evit tagañ an amezeg-mañ
+                            # Jedet e vo ar feur tagañ amañ ha lakaet er geriadur "taoliou_tagan"
+                            enebour = amezeg.aloubet_gant
+                            skor_tagan = 0
+                            skor_difenn = 2 * amezeg.talvoud
+                            for k in amezeg.amezeien:
+                                if k.aloubet_gant == self:
+                                    skor_tagan = skor_tagan + k.talvoud
+                                elif k.aloubet_gant == enebour:
+                                    skor_difenn = skor_difenn + k.talvoud
+                            skor_hollek = (skor_tagan - skor_difenn)/9.0
+                            skor_hollek = max(-0.48, min(skor_hollek, 0.48))
+                            feur_gounid = (0.5 + skor_hollek)*100
+                            self.feuriou_tagan[amezeg] = feur_gounid
                             self.taoliou_tagan.add(amezeg)
         if len(self.uzinou) == 0 and n_taol > 1:
             self.bev = False
