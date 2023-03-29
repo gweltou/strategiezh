@@ -17,6 +17,7 @@
      * Lakaat an destenn sikour da zirolliñ en traoñ nemetken (evel er skinwel)
      * Cheñch ar fonksion `draw_uzin` evit ma vefe kreizennet an tresadenn war an daveenoù roet e arguzenn.
      * Kavout efedoù son simpl.
+     * Deplaseal an destenn skor
 """
 
 
@@ -137,55 +138,52 @@ def draw():
 def mousePressed(): 
     choarier = choarierien[n_choarier]
     
-    is_valid_move = False
+    end_turn = False
     
     if tostan:
         # Kliket eo bet war ur gellig
         if tostan in choarier.taoliou_aloubin:
             tostan.aloubet_gant = choarier
             choarier.poentou -= tostan.talvoud
-            is_valid_move = True
             if n_taol == 1:
                 tostan.aloubet_gant = choarier
                 #choarier.uzinou.append(tostan)
                 tostan.is_uzin = True
-        
+            choarier.update()
         elif tostan in choarier.taoliou_tagan:
             enebour = tostan.aloubet_gant
-            n_tager = 0
-            n_difenner = 0
+            skor_tagan = 0
+            skor_difenn = 2 * tostan.talvoud
             for k in tostan.amezeien:
                 if k.aloubet_gant == choarier:
-                    n_tager = n_tager + 1
+                    skor_tagan = skor_tagan + k.talvoud
                 elif k.aloubet_gant == enebour:
-                    n_difenner = n_difenner + 1
-            skor_tagan = 2 * tostan.talvoud + n_tager
-            skor_difenn = 2 * tostan.talvoud + n_difenner
-            skor_hollek = (skor_tagan - skor_difenn)/5.0
+                    skor_difenn = skor_difenn + k.talvoud
+            skor_hollek = (skor_tagan - skor_difenn)/8.0
             skor_hollek = max(-0.5, min(skor_hollek, 0.5))
             feur_gounid = (0.5 + skor_hollek)*100
-            print(feur_gounid, n_tager, n_difenner)
+            print(feur_gounid, skor_tagan, skor_difenn)
             if random(0, 100) < feur_gounid :
                 tostan.is_uzin = False
                 tostan.aloubet_gant = choarier
                 # Distrujañ tiriadoù ar c'hoarier taget
                 enebour.trochan()
                 
-            is_valid_move = True
             # Paeañ priz an tagadenn
             choarier.poentou -= tostan.talvoud * 2
-            
+            choarier.update()
         elif tostan in choarier.taoliou_sevel:
             tostan.is_uzin = True
             #choarier.uzinou.append(tostan)
             choarier.poentou -= tostan.talvoud * 2
-            is_valid_move = True
+            choarier.update()
     else:
         # Kliket eo bet e diavaez ar gael
         if n_taol > 1 or len(choarier.uzinou) >= 1:
-            is_valid_move = True
+            end_turn = True
     
-    if is_valid_move:
+    n_taol_posubl = len(choarier.taoliou_aloubin) + len(choarier.taoliou_tagan) + len(choarier.taoliou_sevel)
+    if end_turn or n_taol_posubl == 0:
             # Dizoloiñ ar c'helligoù tro-dro
             #for k in tostan.amezeien:
             #    k.dizoloet = True
@@ -263,6 +261,8 @@ def next_player():
             choarier.poentou += k.talvoud
 
     choarier.update()
+    if not choarier.bev:
+        next_player()
 
 
 class Choarier:
@@ -270,6 +270,7 @@ class Choarier:
         self.anv = anv
         self.liv = liv
         self.poentou = 1
+        self.bev = True
     
     def trochan(self):
         # Mirout an tiriadoù liammet da uzinoù nemetken
@@ -287,6 +288,8 @@ class Choarier:
         da_zieubin = set(self.kelligou_aloubet).difference(liammet)
         for k in da_zieubin:
             k.aloubet_gant = None
+        
+        self.update()
     
     
     def update(self):
@@ -297,7 +300,7 @@ class Choarier:
         self.kelligou_aloubet = []
         self.uzinou = []
         
-        if n_taol == 1:
+        if n_taol == 1 and self.poentou == 1:
             # Kentañ taol, kelligoù ar vord a c'hell bezañ aloubet
             for k in kelligou:
                 if len(k.amezeien) < 6 and k.aloubet_gant == None:
@@ -324,7 +327,9 @@ class Choarier:
                             if self.poentou >= amezeg.talvoud:
                                 self.taoliou_aloubin.add(amezeg)                          
                         elif amezeg.aloubet_gant != self and self.poentou >= amezeg.talvoud * 2:
-                            self.taoliou_tagan.add(amezeg)  
+                            self.taoliou_tagan.add(amezeg)
+        if len(self.uzinou) == 0 and n_taol > 1:
+            self.bev = False
         
 
 class Kellig:
