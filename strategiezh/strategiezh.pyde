@@ -134,7 +134,7 @@ def draw():
     # Ur wech kentañ e du, evit kuzat ar pezh zo a-dreñv (an destenn o tremen)
     # Hag un eil wech, damtreuzwelus, evit kaout ul liv un tamm sklaeroc'h eget ar foñs
     fill(0)
-    circle(40, 30, 180)
+    circle(40, 30, 170)
     fill(choarier.liv, 190)
     circle(40, 30, 180)
     fill(255, 250)
