@@ -26,7 +26,7 @@ from random import shuffle
 
 N = 4 # Niver a c'hellig dre kostez
 S = 44 # Ment pep kellig (e pixel)
-NIVER_CHOARIERIEN = 3
+NIVER_CHOARIERIEN = 2
 
 
 kelligou = []
@@ -100,15 +100,19 @@ def draw():
         k.draw()
     for k in choarier.taoliou_aloubin:
         # Livañ ar c'helligoù a c'hell bezañ aloubet gant ar c'hoarier
-        fill(80, 255, 80, ((1.4+sin(t_choarier * 0.08 - PI*0.25)) * 50))
+        fill(80, 255, 80, ((1.4+sin(t_choarier * 0.08 - PI*0.25)) * 30))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in choarier.taoliou_sevel:
         # Livañ ar c'helligoù lec'h ma c'hell ar c'hoarier sevel un uzin
-        fill(180, 250, 40, ((1.4+sin(t_choarier * 0.08)) * 50))
+        fill(180, 250, 40, ((1.4+sin(t_choarier * 0.08)) * 30))
         draw_hex(k.pos.x, k.pos.y, k.rad)
+    #for k in choarier.taoliou_distruj:
+    #    # Livañ ar c'helligoù lec'h ma c'hell ar c'hoarier distruj un uzin
+    #    fill(200, 200, 20, 50)
+    #    draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in choarier.taoliou_tagan:
         # Livañ ar c'helligou a c'hell bezañ taget
-        fill(255, 80, 80, ((1.4+sin(t_choarier * 0.08 - HALF_PI)) * 50))
+        fill(255, 80, 80, ((1.4+sin(t_choarier * 0.08 - HALF_PI)) * 30))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in kelligou:
         k.draw_above()
@@ -180,6 +184,11 @@ def mousePressed():
             #choarier.uzinou.append(tostan)
             choarier.poentou -= tostan.talvoud * 2
             choarier.update()
+        elif tostan in choarier.taoliou_distruj:
+            tostan.is_uzin = False
+            #choarier.uzinou.append(tostan)
+            choarier.poentou -= tostan.talvoud * 2
+            choarier.update()
     else:
         # Kliket eo bet e diavaez ar gael
         if n_taol > 1 or len(choarier.uzinou) >= 1:
@@ -233,7 +242,7 @@ def init_game():
               color(240, 30, 240),
               color(120, 127, 220),
               color(255, 90, 110),
-              color(100, 240, 240)
+              color(100, 240, 240),
             ]
     shuffle(liviou)    # Meskañ al livioù
     choarierien = []
@@ -297,9 +306,11 @@ class Choarier:
     
     def update(self):
         # Dizoloiñ an taolioù posupl e pep tro
+        
         self.taoliou_aloubin = set()
         self.taoliou_tagan = set()
         self.taoliou_sevel = []
+        self.taoliou_distruj = set()
         self.kelligou_aloubet = []
         self.uzinou = []
         self.feuriou_tagan = dict()
@@ -322,6 +333,9 @@ class Choarier:
                     
                     if k.is_uzin:
                         self.uzinou.append(k)
+                        if self.poentou >= k.talvoud * 2:
+                            # An uzin-se a c'hell bezañ distrujet
+                            self.taoliou_distruj.add(k)
                     elif self.poentou >= k.talvoud * 2:
                         self.taoliou_sevel.append(k)       
                                      
@@ -346,8 +360,14 @@ class Choarier:
                             feur_gounid = (0.5 + skor_hollek)*100
                             self.feuriou_tagan[amezeg] = feur_gounid
                             self.taoliou_tagan.add(amezeg)
+                            
         if len(self.uzinou) == 0 and n_taol > 1:
             self.bev = False
+        
+        if len(self.uzinou) >= N:
+            self.taoliou_sevel = [] # Ne c'heller ket mui sevel uzinoù ma vez re
+        if len(self.uzinou) == 1:
+            self.taoliou_distruj = [] # Ne c'heller ket mui sevel uzinoù ma ne chom nemet unan
         
 
 class Kellig:
