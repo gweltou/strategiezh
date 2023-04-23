@@ -12,7 +12,7 @@
         - tro 4: Savit uzinoù evit gounid poentoù bep tro
         - tro 5: Un uzin a roioù bep tro kement a poentoù eget e dalvoud
         - tro 6: Distrujit uzinoù ar re all evit gounid ar partienn
-        - tro 7:
+        - tro 7: Gallout a reer sevel X uzin d'ar muiañ. Distrujit uzinoù kozh evit sevel reoù nevez.
      * Lakaat an destenn sikour da zirolliñ en traoñ nemetken (evel er skinwel)
      * Cheñch ar fonksion `draw_uzin` evit ma vefe kreizennet an tresadenn war an daveenoù roet e arguzenn.
      * Kavout efedoù son simpl.
@@ -128,6 +128,9 @@ def draw():
     fill(255, 180, 110)
     for k in choarier.feuriou_tagan:
         fg = choarier.feuriou_tagan[k]
+        # Bonus tagañ war ar memes tiriad
+        if k in choarier.tagadennou:
+            fg += 5 * choarier.tagadennou[k]
         txt = str(int(round(fg))) + '%'
         tw = textWidth(txt)
         text(txt, k.pos.x - tw*0.5, k.pos.y + S*0.7)
@@ -164,29 +167,38 @@ def mousePressed():
             choarier.poentou -= tostan.talvoud
             if n_taol == 1:
                 tostan.aloubet_gant = choarier
-                #choarier.uzinou.append(tostan)
                 tostan.is_uzin = True
             choarier.update()
         elif tostan in choarier.taoliou_tagan:
             feur_gounid = choarier.feuriou_tagan[tostan]
+            
+            # Reiñ ur bonus tagan evit pep tagadenn war ar memes tiriad
+            if tostan in choarier.tagadennou:
+                feur_gounid += 5 * choarier.tagadennou[tostan]
+            
             if random(0, 100) < feur_gounid :
                 tostan.is_uzin = False
-                tostan.aloubet_gant = choarier
                 # Distrujañ tiriadoù ar c'hoarier taget
                 enebour = tostan.aloubet_gant
+                tostan.aloubet_gant = choarier
                 enebour.trochan()
                 
             # Paeañ priz an tagadenn
             choarier.poentou -= tostan.talvoud * 2
+            
+            # Ouzhpennañ ur bonus tagañ war an tiriad-mañ
+            if tostan in choarier.tagadennou:
+                choarier.tagadennou[tostan] += 1
+            else:
+                choarier.tagadennou[tostan] = 1
+            
             choarier.update()
         elif tostan in choarier.taoliou_sevel:
             tostan.is_uzin = True
-            #choarier.uzinou.append(tostan)
             choarier.poentou -= tostan.talvoud * 2
             choarier.update()
         elif tostan in choarier.taoliou_distruj:
             tostan.is_uzin = False
-            #choarier.uzinou.append(tostan)
             choarier.poentou -= tostan.talvoud * 2
             choarier.update()
     else:
@@ -194,7 +206,8 @@ def mousePressed():
         if n_taol > 1 or len(choarier.uzinou) >= 1:
             end_turn = True
     
-    n_taol_posubl = len(choarier.taoliou_aloubin) + len(choarier.taoliou_tagan) + len(choarier.taoliou_sevel)
+    n_taol_posubl = len(choarier.taoliou_aloubin) + len(choarier.taoliou_tagan) \
+                  + len(choarier.taoliou_sevel) + len(choarier.taoliou_distruj)
     if end_turn or n_taol_posubl == 0:
             # Dizoloiñ ar c'helligoù tro-dro
             #for k in tostan.amezeien:
@@ -272,6 +285,9 @@ def next_player():
         if k.aloubet_gant == choarier and k.is_uzin:
             choarier.poentou += k.talvoud
 
+    # Lakaat ar bonusoù tagañ da vann
+    choarier.tagadennou = dict()
+
     choarier.update()
     if not choarier.bev:
         next_player()
@@ -289,13 +305,16 @@ class Choarier:
         self.update()
             
         liammet = set()
-        da_liamman = self.uzinou[:]
+        da_liamman = self.uzinou.copy()
+        print(self.anv)
+        print(da_liamman)
         while len(da_liamman) > 0:
             kellig = da_liamman.pop()
             liammet.add(kellig)
             for amezeg in kellig.amezeien:
                 if amezeg.aloubet_gant == self and amezeg not in liammet:
-                    da_liamman.append(amezeg)
+                    da_liamman.add(amezeg)
+                    print(da_liamman)
         
         da_zieubin = set(self.kelligou_aloubet).difference(liammet)
         for k in da_zieubin:
@@ -312,7 +331,7 @@ class Choarier:
         self.taoliou_sevel = []
         self.taoliou_distruj = set()
         self.kelligou_aloubet = []
-        self.uzinou = []
+        self.uzinou = set()
         self.feuriou_tagan = dict()
         
         if n_taol == 1 and self.poentou == 1:
@@ -332,7 +351,7 @@ class Choarier:
                     self.kelligou_aloubet.append(k)
                     
                     if k.is_uzin:
-                        self.uzinou.append(k)
+                        self.uzinou.add(k)
                         if self.poentou >= k.talvoud * 2:
                             # An uzin-se a c'hell bezañ distrujet
                             self.taoliou_distruj.add(k)
@@ -379,6 +398,7 @@ class Kellig:
         self.amezeien = set()
         self.aloubet_gant = None  # 'None' m'a n'eo ket bet aloubet, ar c'hoarier perc'hen mod-all (class Choarier)
         self.is_uzin = False
+        self.tagadennou = dict() # Evit kontañ ar bonusoù tagañ pa vez taget ar memes tiriad meur a wech
     
     def draw(self):
         # Fonksion galvet evit tresañ pep kellig
