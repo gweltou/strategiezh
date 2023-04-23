@@ -112,7 +112,7 @@ def draw():
     #    draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in choarier.taoliou_tagan:
         # Livañ ar c'helligou a c'hell bezañ taget
-        fill(255, 80, 80, ((1.4+sin(t_choarier * 0.08 - HALF_PI)) * 30))
+        fill(220, 80, 80, ((1.4+sin(t_choarier * 0.08 - HALF_PI)) * 43))
         draw_hex(k.pos.x, k.pos.y, k.rad)
     for k in kelligou:
         k.draw_above()
@@ -125,7 +125,7 @@ def draw():
     
     # Skrivañ ar feurioù tagan a-us d'ar gelligoù
     textSize(18)
-    fill(255, 180, 110)
+    fill(255, 180, 160)
     for k in choarier.feuriou_tagan:
         fg = choarier.feuriou_tagan[k]
         # Bonus tagañ war ar memes tiriad
@@ -133,7 +133,7 @@ def draw():
             fg += 5 * choarier.tagadennou[k]
         txt = str(int(round(fg))) + '%'
         tw = textWidth(txt)
-        text(txt, k.pos.x - tw*0.5, k.pos.y + S*0.7)
+        text(txt, k.pos.x - tw*0.5, k.pos.y + S*0.72)
     
     # HUD ar c'hoarier
     noStroke()
@@ -141,12 +141,12 @@ def draw():
     # Ur wech kentañ e du, evit kuzat ar pezh zo a-dreñv (an destenn o tremen)
     # Hag un eil wech, damtreuzwelus, evit kaout ul liv un tamm sklaeroc'h eget ar foñs
     fill(0)
-    circle(40, 30, 170)
+    circle(40, 30, 160)
     fill(choarier.liv, 190)
-    circle(40, 30, 180)
+    circle(40, 30, 160)
     fill(255, 250)
     textSize(70)
-    text(choarier.poentou, 28, 80)
+    text(choarier.poentou, 24, 76)
     fill(255, 190)
     textSize(25)
     text(choarier.anv, 150, 34)
@@ -154,11 +154,13 @@ def draw():
     text("Tro: " + str(n_taol), width-110, 30)
     
     # Tresañ ikonoù evit an niver a uzinou
-    for i in range(len(choarier.uzinou)):
-        fill(choarier.liv, 160)
-        circle(30, 150 + i*40, 36)
+    for i in range(N - len(choarier.uzinou)):
+        fill(0, 50)
+        circle(25, 140 + i*42, 40)
+        fill(choarier.liv, 180)
+        circle(25, 140 + i*42, 36)
         fill(255, 180)
-        draw_uzin(30 - 9, 150 - 9 + i*40, 18)
+        draw_uzin(25 - 9, 140 - 9 + i*42, 18)
 
 
 
@@ -313,15 +315,12 @@ class Choarier:
             
         liammet = set()
         da_liamman = self.uzinou.copy()
-        print(self.anv)
-        print(da_liamman)
         while len(da_liamman) > 0:
             kellig = da_liamman.pop()
             liammet.add(kellig)
             for amezeg in kellig.amezeien:
                 if amezeg.aloubet_gant == self and amezeg not in liammet:
                     da_liamman.add(amezeg)
-                    print(da_liamman)
         
         da_zieubin = set(self.kelligou_aloubet).difference(liammet)
         for k in da_zieubin:
@@ -420,6 +419,9 @@ class Kellig:
                 pushStyle()
                 fill(self.aloubet_gant.liv)
                 if self.is_uzin:
+                    #fill(0, 50)
+                    #circle(self.pos.x, self.pos.y, S*1.4 + 5)
+                    fill(self.aloubet_gant.liv)
                     circle(self.pos.x, self.pos.y, S*1.4)
                 else:
                     circle(self.pos.x, self.pos.y, S*1.0)
@@ -439,6 +441,10 @@ class Kellig:
         # Skrivañ talvoud ar c'hellig above dezhi
         if self.dizoloet == True:
             if self.is_uzin:
+                stroke(0, 60)
+                strokeWeight(2.5)
+                noFill()
+                circle(self.pos.x, self.pos.y, S*1.4)
                 fill(30, 30, 0, 100)
                 draw_uzin(int(self.pos.x - S*0.425), int(self.pos.y - S*0.425), S*0.85)
             fill(255)
