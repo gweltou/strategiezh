@@ -152,6 +152,13 @@ def draw():
     text(choarier.anv, 150, 34)
     textSize(25)
     text("Tro: " + str(n_taol), width-110, 30)
+    
+    # Tresañ ikonoù evit an niver a uzinou
+    for i in range(len(choarier.uzinou)):
+        fill(choarier.liv, 160)
+        circle(30, 150 + i*40, 36)
+        fill(255, 180)
+        draw_uzin(30 - 9, 150 - 9 + i*40, 18)
 
 
 
