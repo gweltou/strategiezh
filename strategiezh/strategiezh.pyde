@@ -156,11 +156,11 @@ def draw():
     # Tresañ ikonoù evit an niver a uzinou
     for i in range(N - len(choarier.uzinou)):
         fill(0, 50)
-        circle(25, 140 + i*42, 40)
+        circle(25, 135 + i*42, 40)
         fill(choarier.liv, 180)
-        circle(25, 140 + i*42, 36)
+        circle(25, 135 + i*42, 36)
         fill(255, 180)
-        draw_uzin(25 - 9, 140 - 9 + i*42, 18)
+        draw_uzin(25 - 9, 135 - 9 + i*42, 18)
 
 
 
