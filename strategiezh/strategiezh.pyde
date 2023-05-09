@@ -33,13 +33,19 @@ kelligou = []
 choarierien = []
 
 
+
 def setup():
+    global img_shield, img_sword
+    
     size(600, 600)
     #fullScreen()
     
     # Kargañ ar stumm vektorel "home.svg"
-    global svg
-    svg = loadShape("home.svg")
+    #global svg
+    #svg = loadShape("home.svg")
+    img_shield = loadImage("shield.png")
+    img_sword = loadImage("sword.png")
+
     
     # Amañ e vez dibabet ment an tablez
     sevel_kael(N, S)
@@ -168,9 +174,11 @@ def mousePressed():
     choarier = choarierien[n_choarier]
     
     end_turn = False
+    is_move_valid = False
     
     if tostan:
         # Kliket eo bet war ur gellig
+        is_move_valid = True
         if tostan in choarier.taoliou_aloubin:
             tostan.aloubet_gant = choarier
             choarier.poentou -= tostan.talvoud
@@ -210,18 +218,22 @@ def mousePressed():
             tostan.is_uzin = False
             choarier.poentou -= tostan.talvoud * 2
             choarier.update()
+        else:
+            is_move_valid = False
     else:
         # Kliket eo bet e diavaez ar gael
         if n_taol > 1 or len(choarier.uzinou) >= 1:
             end_turn = True
     
+    #Dizoloiñ ar c'helligoù tro-dro
+    if is_move_valid:
+        for k in tostan.amezeien:
+            k.dizoloet = True
+    
     n_taol_posubl = len(choarier.taoliou_aloubin) + len(choarier.taoliou_tagan) \
                   + len(choarier.taoliou_sevel) + len(choarier.taoliou_distruj)
     if end_turn or n_taol_posubl == 0:
-            # Dizoloiñ ar c'helligoù tro-dro
-            #for k in tostan.amezeien:
-            #    k.dizoloet = True
-            next_player()
+        next_player()
 
 
 def init_game():
@@ -373,13 +385,15 @@ class Choarier:
                             # A-walc'h a poentoù evit tagañ an amezeg-mañ
                             # Jedet e vo ar feur tagañ amañ ha lakaet er geriadur "taoliou_tagan"
                             enebour = amezeg.aloubet_gant
-                            skor_tagan = 0
-                            skor_difenn = 2 * amezeg.talvoud
+                            bonus_tagan = 0
+                            skor_tagan = k.talvoud + bonus_tagan
+                            bonus_difenn = 1 if amezeg.is_uzin else 0
+                            skor_difenn = 2 * amezeg.talvoud + bonus_difenn
                             for k in amezeg.amezeien:
                                 if k.aloubet_gant == self:
-                                    skor_tagan = skor_tagan + k.talvoud
+                                    skor_tagan += k.talvoud
                                 elif k.aloubet_gant == enebour:
-                                    skor_difenn = skor_difenn + k.talvoud
+                                    skor_difenn += k.talvoud
                             skor_hollek = (skor_tagan - skor_difenn)/9.0
                             skor_hollek = max(-0.48, min(skor_hollek, 0.48))
                             feur_gounid = (0.5 + skor_hollek)*100
@@ -400,7 +414,7 @@ class Kellig:
         self.pos = PVector(x, y)
         self.talvoud = 0
         self.tliv = 0
-        self.dizoloet = True
+        self.dizoloet = False
         self.amezeien = set()
         self.aloubet_gant = None  # 'None' m'a n'eo ket bet aloubet, ar c'hoarier perc'hen mod-all (class Choarier)
         self.is_uzin = False
@@ -447,6 +461,7 @@ class Kellig:
                 circle(self.pos.x, self.pos.y, S*1.4)
                 fill(30, 30, 0, 100)
                 draw_uzin(int(self.pos.x - S*0.425), int(self.pos.y - S*0.425), S*0.85)
+                image(img_shield, self.pos.x - S*0.4, self.pos.y - S*0.7)
             fill(255)
             textSize(22)
             text(self.talvoud, self.pos.x-7, self.pos.y+7)
@@ -506,7 +521,7 @@ def keyPressed():
     if key == 'p':
         # Saveteet e vez ur poltred-skramm
         saveFrame("strategiezh_###.png")
-        println("Poltred-scramm saveteet")
+        println("Poltred-skramm saveteet")
     elif key == 'r':
         # Adkregiñ ar c'hoari
         init_game()
