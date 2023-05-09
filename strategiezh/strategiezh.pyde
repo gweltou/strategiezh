@@ -385,15 +385,14 @@ class Choarier:
                             # A-walc'h a poentoù evit tagañ an amezeg-mañ
                             # Jedet e vo ar feur tagañ amañ ha lakaet er geriadur "taoliou_tagan"
                             enebour = amezeg.aloubet_gant
-                            bonus_tagan = 0
-                            skor_tagan = k.talvoud + bonus_tagan
-                            bonus_difenn = 1 if amezeg.is_uzin else 0
-                            skor_difenn = 2 * amezeg.talvoud + bonus_difenn
-                            for k in amezeg.amezeien:
-                                if k.aloubet_gant == self:
-                                    skor_tagan += k.talvoud
-                                elif k.aloubet_gant == enebour:
-                                    skor_difenn += k.talvoud
+                            skor_tagan = 0
+                            bonus_uzin = 1 if amezeg.is_uzin else 0
+                            skor_difenn = 1.5 * amezeg.talvoud + bonus_uzin
+                            for k2 in amezeg.amezeien:
+                                if k2.aloubet_gant == self:
+                                    skor_tagan += k2.talvoud
+                                elif k2.aloubet_gant == enebour:
+                                    skor_difenn += k2.talvoud
                             skor_hollek = (skor_tagan - skor_difenn)/9.0
                             skor_hollek = max(-0.48, min(skor_hollek, 0.48))
                             feur_gounid = (0.5 + skor_hollek)*100
